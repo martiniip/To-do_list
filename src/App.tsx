@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash, Edit, Check } from 'lucide-react';
+import { Plus, Trash, Edit, Check, Home, Bell, User } from 'lucide-react';
 
 interface Todo {
   id: number;
@@ -13,6 +13,7 @@ const TodoListApp = () => {
   const [newTodo, setNewTodo] = useState('');
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('low');
+  const [filter, setFilter] = useState<'low' | 'medium' | 'high' | 'all'>('all');
 
   const addTodo = () => {
     if (newTodo.trim() !== '') {
@@ -43,7 +44,7 @@ const TodoListApp = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 pt-6 md:p-6 lg:p-12 xl:p-24">
+    <div className="max-w-md mx-auto p-4 pt-6 md:p-6 lg:p-12 xl:p-24 bg-gray-100 h-screen">
       <h1 className="text-3xl font-bold mb-4">To-Do List App</h1>
       <div className="flex items-center mb-4">
         <input
@@ -78,8 +79,20 @@ const TodoListApp = () => {
           </button>
         )}
       </div>
+      <div className="flex items-center mb-4">
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as 'low' | 'medium' | 'high' | 'all')}
+          className="p-2 text-sm text-gray-700 rounded-lg bg-gray-200 hover:bg-gray-300"
+        >
+          <option value="all">All</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
       <ul>
-        {todos.map((todo) => (
+        {todos.filter((todo) => filter === 'all' || todo.priority === filter).map((todo) => (
           <li key={todo.id} className="flex items-center mb-2">
             <input
               type="checkbox"
@@ -107,6 +120,28 @@ const TodoListApp = () => {
           </li>
         ))}
       </ul>
+      <div className="fixed bottom-0 left-0 w-full bg-gray-200 p-4 text-center">
+        <div className="flex justify-around">
+          <button
+            className="p-2 text-sm text-gray-700 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center"
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Home
+          </button>
+          <button
+            className="p-2 text-sm text-gray-700 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center"
+          >
+            <Bell className="w-4 h-4 mr-2" />
+            Notifications
+          </button>
+          <button
+            className="p-2 text-sm text-gray-700 rounded-lg bg-gray-200 hover:bg-gray-300 flex items-center"
+          >
+            <User className="w-4 h-4 mr-2" />
+            Profile
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
